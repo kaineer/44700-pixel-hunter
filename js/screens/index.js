@@ -4,8 +4,6 @@ import rules from './rules';
 import game from './game';
 import stats from './stats';
 
-let mainElement = document.getElementById('main');
-
 let slides = [
   intro,
   greeting,
@@ -30,6 +28,8 @@ export const start = (data) => {
 
 export const select = (data) => {
   const index = data.screen;
+
+  let mainElement = document.getElementById('main');
 
   mainElement.innerHTML = '';
   mainElement.appendChild(slides[index](data));

@@ -1,14 +1,24 @@
 export const Screen = {
-  INTRO: 1,
-  GREETING: 2,
-  RULES: 3,
-  GAME: 4,
-  STATS: 5
+  INTRO: 0,
+  GREETING: 1,
+  RULES: 2,
+  GAME: 3,
+  STATS: 4
 };
+
+const ImageNames = [
+  'unknown',
+  'photo',
+  'paint'
+];
 
 export const Image = {
   PHOTO: 1,
-  PAINT: 2
+  PAINT: 2,
+
+  getName(code = 0) {
+    return ImageNames[code];
+  }
 };
 
 const ResultNames = [
@@ -46,7 +56,7 @@ export const Results = {
   },
 
   hasFast(resultRow) {
-    return this.countFast(resultRow) > 0;
+    return this.isWinner(resultRow) && this.countFast(resultRow) > 0;
   },
 
   countFast(data) {
@@ -54,7 +64,7 @@ export const Results = {
   },
 
   hasSlow(resultRow) {
-    return this.countSlow(resultRow) > 0;
+    return this.isWinner(resultRow) && this.countSlow(resultRow) > 0;
   },
 
   countSlow(data) {

@@ -1,4 +1,4 @@
-import {Question} from '../../data';
+import {Question, Results} from '../../data';
 import game1 from './game1';
 import game2 from './game2';
 import game3 from './game3';
@@ -10,14 +10,42 @@ const startGame = (data) => {
 
 export const nextQuestion = (data, evt) => {
   const question = data.question;
+  const lifes = data.lifes;
 
-  if (question < 9) {
+  if (lifes > 0 && question < 9) {
     return Object.assign({}, data, {
       question: question + 1
     });
   } else {
     return nextScreen(data);
   }
+};
+
+const answer = (data, type) => {
+  const stats = data.stats;
+
+  return Object.assign({}, data, {
+    stats: stats.concat([type])
+  });
+};
+
+export const answerCorrect = (data) => {
+  return answer(data, Results.CORRECT);
+};
+
+export const answerFast = (data) => {
+  return answer(data, Results.FAST);
+};
+
+export const answerSlow = (data) => {
+  return answer(data, Results.SLOW);
+};
+
+export const answerWrong = (data) => {
+  const answerData = answer(data, Results.WRONG);
+  return Object.assign({}, answerData, {
+    lifes: answerData.lifes - 1
+  });
 };
 
 export const displayNextQuestion = (data, evt) => {
