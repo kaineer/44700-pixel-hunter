@@ -20,7 +20,7 @@ export const startApp = (data) => {
 
 export const nextScreen = (data) => {
   return Object.assign({}, data, {
-    screen: Math.min(data.screen + 1, slides.length -1 )
+    screen: Math.min(data.screen + 1, slides.length - 1)
   });
 };
 
