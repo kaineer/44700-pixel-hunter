@@ -1,4 +1,5 @@
 import {getElementFromTemplate} from '../utils/get-element';
+import {next} from './index';
 
 const markup = `
   <header class="header">
@@ -27,4 +28,18 @@ const markup = `
   </div>
 `;
 
-export default getElementFromTemplate(markup);
+const element = getElementFromTemplate(markup);
+
+const form = element.querySelector('.rules__form');
+const nameInput = form.querySelector('.rules__input');
+const submit = form.querySelector('.rules__button');
+
+nameInput.required = true;
+
+nameInput.addEventListener('input', () => {
+  submit.disabled = !nameInput.validity.valid;
+});
+
+form.addEventListener('submit', (e) => next(e));
+
+export default element;

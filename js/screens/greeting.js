@@ -1,4 +1,5 @@
 import {getElementFromTemplate} from '../utils/get-element';
+import {next} from './index';
 
 const markup = `
   <div class="greeting  central--blur">
@@ -16,4 +17,10 @@ const markup = `
   </div>
 `;
 
-export default getElementFromTemplate(markup);
+const element = getElementFromTemplate(markup);
+
+const greetingNext = element.querySelector('.greeting__continue');
+
+greetingNext.addEventListener('click', (e) => next(e));
+
+export default element;

@@ -1,4 +1,5 @@
 import {getElementFromTemplate} from '../utils/get-element';
+import {next} from '.';
 
 const markup = `
   <header class="header">
@@ -58,4 +59,10 @@ const markup = `
   </div>
 `;
 
-export default getElementFromTemplate(markup);
+const element = getElementFromTemplate(markup);
+
+Array.from(element.querySelectorAll('.game__answer')).forEach((elt) => {
+  elt.addEventListener('click', (e) => next(e));
+});
+
+export default element;

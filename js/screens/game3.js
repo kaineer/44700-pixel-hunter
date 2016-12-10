@@ -1,12 +1,13 @@
 import {getElementFromTemplate} from '../utils/get-element';
+import {next} from '.';
 
 const markup = `
   <header class="header">
     <div class="header__back">
-      <span class="back">
-        <img src="img/arrow_left.svg" width="45" height="45" alt="Back">
-        <img src="img/logo_small.png" width="101" height="44">
-      </span>
+        <span class="back">
+          <img src="img/arrow_left.svg" width="45" height="45" alt="Back">
+          <img src="img/logo_small.png" width="101" height="44">
+        </span>
     </div>
     <h1 class="game__timer">NN</h1>
     <div class="game__lives">
@@ -16,18 +17,16 @@ const markup = `
     </div>
   </header>
   <div class="game">
-    <p class="game__task">Угадай, фото или рисунок?</p>
-    <form class="game__content  game__content--wide">
+    <p class="game__task">Найдите рисунок среди изображений</p>
+    <form class="game__content  game__content--triple">
       <div class="game__option">
-        <img src="http://placehold.it/705x455" alt="Option 1" width="705" height="455">
-        <label class="game__answer  game__answer--photo">
-          <input name="question1" type="radio" value="photo">
-          <span>Фото</span>
-        </label>
-        <label class="game__answer  game__answer--wide  game__answer--paint">
-          <input name="question1" type="radio" value="paint">
-          <span>Рисунок</span>
-        </label>
+        <img src="http://placehold.it/304x455" alt="Option 1" width="304" height="455">
+      </div>
+      <div class="game__option  game__option--selected">
+        <img src="http://placehold.it/304x455" alt="Option 1" width="304" height="455">
+      </div>
+      <div class="game__option">
+        <img src="http://placehold.it/304x455" alt="Option 1" width="304" height="455">
       </div>
     </form>
     <div class="stats">
@@ -47,7 +46,13 @@ const markup = `
   </div>
 `;
 
-export default getElementFromTemplate(markup);
+const element = getElementFromTemplate(markup);
+
+Array.from(element.querySelectorAll('.game__option')).forEach((elt) => {
+  elt.addEventListener('click', (e) => next(e));
+});
+
+export default element;
 
 
 
