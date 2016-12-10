@@ -1,112 +1,117 @@
 import {getElementFromTemplate} from '../utils/get-element';
+import header from './partials/simple-header';
+import {data, Results} from '../data';
+import gameStats from './partials/game-stats';
 
-const markup = `
-  <header class="header">
-    <div class="header__back">
-      <span class="back">
-        <img src="img/arrow_left.svg" width="45" height="45" alt="Back">
-        <img src="img/logo_small.png" width="101" height="44">
-      </span>
-    </div>
-  </header>
-  <div class="result">
-    <h1>Победа!</h1>
-    <table class="result__table">
-      <tr>
-        <td class="result__number">1.</td>
-        <td colspan="2">
-          <ul class="stats">
-            <li class="stats__result stats__result--wrong"></li>
-            <li class="stats__result stats__result--slow"></li>
-            <li class="stats__result stats__result--fast"></li>
-            <li class="stats__result stats__result--correct"></li>
-            <li class="stats__result stats__result--wrong"></li>
-            <li class="stats__result stats__result--unknown"></li>
-            <li class="stats__result stats__result--slow"></li>
-            <li class="stats__result stats__result--unknown"></li>
-            <li class="stats__result stats__result--fast"></li>
-            <li class="stats__result stats__result--unknown"></li>
-          </ul>
-        </td>
-        <td class="result__points">×&nbsp;100</td>
-        <td class="result__total">900</td>
-      </tr>
+const winnerRow = (resultRow, index) => {
+  return `
+    <tr>
+      <td class="result__number">${index + 1}.</td>
+      <td colspan="2">
+        ${gameStats(resultRow)}
+      </td>
+      <td>&times;&nbsp;100</td>
+      <td class="result__total">${Results.countCorrect(resultRow) * 100}</td>
+    </tr>
+  `;
+};
+
+const looserRow = (resultRow, index) => {
+  return `
+    <tr>
+      <td class="result__number">${index + 1}.</td>
+      <td colspan="2">
+        ${gameStats(resultRow)}
+      </td>
+      <td></td>
+      <td class="result__total">FAIL</td>
+    </tr>
+  `;
+};
+
+const row = (resultRow, index) => {
+  if (Results.isWinner(resultRow)) {
+    return winnerRow(resultRow, index);
+  } else {
+    return looserRow(resultRow, index);
+  }
+};
+
+const bonusFast = (resultRow) => {
+  if (Results.isWinner(resultRow) && Results.hasFast(resultRow)) {
+    return `
       <tr>
         <td></td>
         <td class="result__extra">Бонус за скорость:</td>
-        <td class="result__extra">1&nbsp;<span class="stats__result stats__result--fast"></span></td>
+        <td class="result__extra">${Results.countFast(resultRow)}&nbsp;<span class="stats__result stats__result--fast"></span></td>
         <td class="result__points">×&nbsp;50</td>
-        <td class="result__total">50</td>
+        <td class="result__total">${Results.countFast(resultRow) * 50}</td>
       </tr>
+    `;
+  } else {
+    return '';
+  }
+};
+
+const bonusLifes = (result) => {
+  if (result.lifes > 0) {
+    return `
       <tr>
         <td></td>
         <td class="result__extra">Бонус за жизни:</td>
-        <td class="result__extra">2&nbsp;<span class="stats__result stats__result--heart"></span></td>
+        <td class="result__extra">${result.lifes}&nbsp;<span class="stats__result stats__result--heart"></span></td>
         <td class="result__points">×&nbsp;50</td>
-        <td class="result__total">100</td>
+        <td class="result__total">${result.lifes * 50}</td>
       </tr>
+    `;
+  } else {
+    return '';
+  }
+};
+
+const penaltySlow = (resultRow) => {
+  if (Results.isWinner(resultRow) && Results.hasSlow(resultRow)) {
+    return `
       <tr>
         <td></td>
         <td class="result__extra">Штраф за медлительность:</td>
-        <td class="result__extra">2&nbsp;<span class="stats__result stats__result--slow"></span></td>
+        <td class="result__extra">${Results.countSlow(resultRow)}&nbsp;<span class="stats__result stats__result--slow"></span></td>
         <td class="result__points">×&nbsp;50</td>
-        <td class="result__total">-100</td>
+        <td class="result__total">${-Results.countSlow(resultRow) * 50}</td>
       </tr>
+    `;
+  } else {
+    return '';
+  }
+};
+
+const total = (result) => {
+  if (Results.isWinner(result.stats)) {
+    return `
       <tr>
-        <td colspan="5" class="result__total  result__total--final">950</td>
+        <td colspan="5" class="result__total  result__total--final">${Results.calculateTotal(result)}</td>
       </tr>
-    </table>
+    `;
+  }
+};
+
+const getRow = (result, index) => {
+  return (
+    row(result.stats, index) +
+    bonusFast(result.stats) +
+    bonusLifes(result) +
+    penaltySlow(result.stats) +
+    total(result)
+  );
+};
+
+
+const markup = `
+  ${header()}
+  <div class="result">
+    <h1>Победа!</h1>
     <table class="result__table">
-      <tr>
-        <td class="result__number">2.</td>
-        <td>
-          <ul class="stats">
-            <li class="stats__result stats__result--wrong"></li>
-            <li class="stats__result stats__result--slow"></li>
-            <li class="stats__result stats__result--fast"></li>
-            <li class="stats__result stats__result--correct"></li>
-            <li class="stats__result stats__result--wrong"></li>
-            <li class="stats__result stats__result--unknown"></li>
-            <li class="stats__result stats__result--slow"></li>
-            <li class="stats__result stats__result--wrong"></li>
-            <li class="stats__result stats__result--fast"></li>
-            <li class="stats__result stats__result--wrong"></li>
-          </ul>
-        </td>
-        <td class="result__total"></td>
-        <td class="result__total  result__total--final">fail</td>
-      </tr>
-    </table>
-    <table class="result__table">
-      <tr>
-        <td class="result__number">3.</td>
-        <td colspan="2">
-          <ul class="stats">
-            <li class="stats__result stats__result--wrong"></li>
-            <li class="stats__result stats__result--slow"></li>
-            <li class="stats__result stats__result--fast"></li>
-            <li class="stats__result stats__result--correct"></li>
-            <li class="stats__result stats__result--wrong"></li>
-            <li class="stats__result stats__result--unknown"></li>
-            <li class="stats__result stats__result--slow"></li>
-            <li class="stats__result stats__result--unknown"></li>
-            <li class="stats__result stats__result--fast"></li>
-            <li class="stats__result stats__result--unknown"></li>
-          </ul>
-        </td>
-        <td class="result__points">×&nbsp;100</td>
-        <td class="result__total">900</td>
-      </tr>
-      <tr>
-        <td></td>
-        <td class="result__extra">Бонус за жизни:</td>
-        <td class="result__extra">2&nbsp;<span class="stats__result stats__result--heart"></span></td>
-        <td class="result__points">×&nbsp;50</td>
-        <td class="result__total">100</td>
-      </tr>
-      <tr>
-        <td colspan="5" class="result__total  result__total--final">950</td>
-      </tr>
+      ${data.results.map((result, index) => getRow(result, index)).join('')}
     </table>
   </div>
 `;
