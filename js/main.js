@@ -13,8 +13,9 @@
   let rulesElement = loadTemplate('rules');
   let rulesSubmit = rulesElement.querySelector('.rules__button');
 
-  rulesElement.querySelector('.rules__input').oninput = function () {
-    if (this.value) {
+  rulesElement.querySelector('.rules__input').oninput = (evt) => {
+    let $input = evt.target;
+    if ($input.value) {
       rulesSubmit.removeAttribute('disabled');
     } else {
       rulesSubmit.setAttribute('disabled', '');
