@@ -92,6 +92,8 @@ const total = (result) => {
         <td colspan="5" class="result__total  result__total--final">${Results.calculateTotal(result)}</td>
       </tr>
     `;
+  } else {
+    return '';
   }
 };
 
