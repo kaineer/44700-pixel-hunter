@@ -1,6 +1,6 @@
 import {getElementFromTemplate} from '../utils/get-element';
 import header from './partials/simple-header';
-import {data, Results} from '../data';
+import {Results} from '../data';
 import gameStats from './partials/game-stats';
 
 const winnerRow = (resultRow, index) => {
@@ -107,15 +107,16 @@ const getRow = (result, index) => {
   );
 };
 
+export default (data) => {
+  const markup = `
+    ${header()}
+    <div class="result">
+      <h1>Победа!</h1>
+      <table class="result__table">
+        ${data.results.map((result, index) => getRow(result, index)).join('')}
+      </table>
+    </div>
+  `;
 
-const markup = `
-  ${header()}
-  <div class="result">
-    <h1>Победа!</h1>
-    <table class="result__table">
-      ${data.results.map((result, index) => getRow(result, index)).join('')}
-    </table>
-  </div>
-`;
-
-export default getElementFromTemplate(markup);
+  return getElementFromTemplate(markup);
+};

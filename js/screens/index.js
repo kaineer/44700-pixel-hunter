@@ -1,9 +1,7 @@
 import intro from './intro';
 import greeting from './greeting';
 import rules from './rules';
-import game1 from './game1';
-import game2 from './game2';
-import game3 from './game3';
+import game from './game';
 import stats from './stats';
 
 let mainElement = document.getElementById('main');
@@ -12,24 +10,36 @@ let slides = [
   intro,
   greeting,
   rules,
-  game1,
-  game2,
-  game3,
+  game,
   stats
 ];
 
-let current = -1;
-
-export const select = (index) => {
-  current = index;
-  mainElement.innerHTML = '';
-  mainElement.appendChild(slides[index]);
+export const startApp = (data) => {
+  return Object.assign({}, data, {screen: 0});
 };
 
-export const next = (evt) => {
+export const nextScreen = (data) => {
+  return Object.assign({}, data, {
+    screen: Math.min(data.screen + 1, slides.length -1 )
+  });
+};
+
+export const start = (data) => {
+  select(startApp(data));
+};
+
+export const select = (data) => {
+  const index = data.screen;
+
+  mainElement.innerHTML = '';
+  mainElement.appendChild(slides[index](data));
+};
+
+export const next = (data, evt = null) => {
   if (evt) {
     evt.preventDefault();
     evt.stopPropagation();
   }
-  return (current < slides.length - 1) ? select(current + 1) : null;
+
+  select(nextScreen(data));
 };

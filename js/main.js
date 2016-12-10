@@ -1,5 +1,6 @@
-import {select} from './screens';
+import {start} from './screens';
+import {data} from './data';
 
 (function () {
-  select(0);
+  start(data);
 })();
