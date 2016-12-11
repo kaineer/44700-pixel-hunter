@@ -8,12 +8,43 @@ const startGame = (data) => {
   return (Object.assign({}, data, {question: 0, stats: []}));
 };
 
-export const nextQuestion = (data, evt) => {
+const startTimer = (data) => {
+  const startTime = Date.now();
+
+  const timer = {};
+
+  if (data.timer) {
+    clearInterval(data.timer.id);
+  }
+
+  const tick = () => {
+    const msFromStart = Date.now() - startTime;
+    const timeLeft = 30 - Math.floor(msFromStart / 1000);
+
+    if (timeLeft <= 0) {
+      clearInterval(timer.id);
+      select(nextQuestion(answerWrong(data)));
+    } else {
+      renderTime(timeLeft);
+    }
+  };
+
+  timer.id = setInterval(tick, 250);
+
+  return Object.assign({}, data, {
+    timer: {
+      start: startTime,
+      id: timer.id
+    }
+  });
+};
+
+export const nextQuestion = (data) => {
   const question = data.question;
   const lifes = data.lifes;
 
   if (lifes > 0 && question < 9) {
-    return Object.assign({}, data, {
+    return Object.assign({}, startTimer(data), {
       question: question + 1
     });
   } else {
@@ -23,6 +54,10 @@ export const nextQuestion = (data, evt) => {
 
 const answer = (data, type) => {
   const stats = data.stats;
+
+  if (data.timerId) {
+    clearInterval(data.timerId);
+  }
 
   return Object.assign({}, data, {
     stats: stats.concat([type])
@@ -54,7 +89,7 @@ export const displayNextQuestion = (data, evt) => {
     evt.stopPropagation();
   }
 
-  select(nextQuestion(data));
+  select(startTimer(nextQuestion(data)));
 };
 
 const gameScreens = {
@@ -63,9 +98,16 @@ const gameScreens = {
   [Question.THREE_IMAGES]: game3
 };
 
+const renderTime = (timeLeft) => {
+  const element = document.querySelector('.game__timer');
+  if (element) {
+    element.textContent = '' + timeLeft;
+  }
+};
+
 export default (data) => {
   if (typeof (data.question) !== 'number') {
-    data = startGame(data);
+    data = startGame(startTimer(data));
   }
 
   const question = data.questions[data.question];

@@ -3,7 +3,7 @@ const fullHeart = '<img src="img/heart__full.svg" class="game__heart" alt="Life"
 
 const lifes = (count) => {
   return (
-    emptyHeart.repeat(3 - count),
+    emptyHeart.repeat(3 - count) +
     fullHeart.repeat(count)
   );
 };

@@ -41,7 +41,7 @@ gulp.task('style', function () {
 });
 
 gulp.task('scripts', function () {
-  return gulp.src('js/**/*.js')
+  return gulp.src(['js/**/*.js', '!js/**/*.test.js'])
     .pipe(sourcemaps.init())
     .pipe(plumber())
     .pipe(webpack({

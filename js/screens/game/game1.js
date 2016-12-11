@@ -4,6 +4,8 @@ import gameStats from '../partials/game-stats';
 import {gameOption} from '../partials/utils';
 import {displayNextQuestion} from '.';
 
+import {answerWrong, answerCorrect} from '.';
+
 export default (data, question) => {
   const markup = `
     ${header(data.lifes)}
@@ -19,7 +21,7 @@ export default (data, question) => {
   const element = getElementFromTemplate(markup);
 
   Array.from(element.querySelectorAll('.game__answer')).forEach((elt) => {
-    elt.addEventListener('click', (e) => displayNextQuestion(data, e));
+    elt.addEventListener('click', (e) => displayNextQuestion(answerWrong(data), e));
   });
 
   return element;
